@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TikTok Creative Studio</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="header">
+        <h1>🎨 TikTok Creative Studio</h1>
+        <p>Generative Art + Müzik Üretim Platformu</p>
+    </div>
+
+<div class="container">
+    <!-- Sol Panel: Kod Editörü & Animasyon Önizleme -->
+    <div class="code-section">
+        <h3>🧠 Kod Editörü</h3>
+        
+        <!-- Kütüphane Seçici -->
+        <div class="library-selector">
+            <label for="librarySelect">Grafik Kütüphanesi:</label>
+            <select id="librarySelect">
+                <option value="p5js">p5.js (Creative Coding)</option>
+                <option value="threejs">Three.js (3D Graphics)</option>
+                <option value="pixijs">Pixi.js (2D Performance)</option>
+                <option value="webgl">WebGL Shaders (GLSL)</option>
+                <option value="canvas2d">Canvas 2D (Native)</option>
+            </select>
+        </div>
+        
+        <textarea id="codeInput" placeholder="Kod şablonu seçilince burada görünecek...">// p5.js Spiral Animasyonu
+
+
+if (!t) {
+createCanvas(360, 640);
+t = 0;
+}
+
+background(10, 10, 30);
+stroke(100, 200, 255, 200);
+
+for (let i = 0; i < 5000; i++) {
+let x = i % 200;
+let y = Math.floor(i / 200);
+
+let k = x / 8 - 12;
+let e = y / 13 - 14;
+let o = Math.sqrt(k*k + e*e) / 2;
+let d = 5 * cos(o);
+
+let q = x/2 + 10 + 1/k + k * cos(e) * sin(d*8 - t);
+let c = d/3 + t/8;
+
+let px = q * sin(c) + sin(d*2 + t) * k + 180;
+let py = (y/4 + 5*o*o + q*cos(c*3))/2 * cos(c) + 320;
+
+if (px > 0 && px < 360 && py > 0 && py < 640) {
+    point(px, py);
+}
+IGNORE_WHEN_COPYING_START
+content_copy
+download
+Use code with caution.
+IGNORE_WHEN_COPYING_END
+
+}
+
+t += 0.05;</textarea>
+
+<div class="controls">
+            <div class="control-group">
+                <label>Süre (saniye):</label>
+                <input type="number" id="durationInput" value="10" min="1" max="60">
+            </div>
+            <div class="control-group">
+                <label>FPS:</label>
+                <input type="number" id="fpsInput" value="30" min="15" max="60">
+            </div>
+        </div>
+        
+        <div class="animation-action-buttons">
+            <button class="btn" id="playAnimationBtn" onclick="playAnimation()">▶️ Animasyonu Oynat</button>
+            <button class="btn" id="stopAnimationBtn" onclick="stopAnimation()" disabled style="background: linear-gradient(45deg, #666, #444);">⏹️ Durdur</button>
+        </div>
+        <button class="btn" id="saveAnimationVideoBtn" onclick="saveAnimationVideo()" disabled style="margin-top: 10px; background: linear-gradient(45deg, #5cb85c, #4cae4c); width:100%;">💾 Animasyon Videosunu Kaydet</button>
+        
+        <div id="codeStatus" class="status"></div>
+        
+        <h4 class="preview-subtitle" id="animationPreviewTitle" style="display:none; margin-top: 15px; color: #4ecdc4;">🎞️ Kaydedilmiş Animasyon:</h4>
+        <video id="animationPreviewPlayer" controls loop style="display:none; width: 100%; max-height: 200px; margin-top:5px; border-radius: 8px; background-color: #000;"></video>
+    </div>
+    
+    <!-- Orta Panel: Canlı Animasyon & Birleştirilmiş Önizleme -->
+    <div class="preview-section">
+        <h3 class="preview-title" id="liveAnimationTitle">🖼️ Canlı Animasyon</h3>
+        <h3 class="preview-title" id="combinedPreviewTitle" style="display:none;">📱 TikTok Birleştirilmiş Önizleme</h3>
+        <div class="phone-frame">
+            <div id="sketch-holder">
+                <!-- Graphics canvas will be inserted here -->
+            </div>
+            <video id="combinedPreviewPlayer" width="360" height="640" controls loop
+                   style="display: none;">
+            </video>
+        </div>
+    </div>
+    
+    <!-- Sağ Panel: Müzik & Müzik Önizleme -->
+    <div class="music-section">
+        <h3>🎼 Müzik Paneli</h3>
+        
+        <div class="music-controls">
+            <div class="control-group">
+                <label>Müzik Tarzı:</label>
+                <select id="styleSelect">
+                    <option value="ambient">Ambient</option>
+                    <option value="electronic">Electronic</option>
+                    <option value="cinematic">Cinematic</option>
+                    <option value="minimal">Minimal</option>
+                    <option value="dreamy">Dreamy</option>
+                    <option value="calming_pad">Sakinleştirici Pad</option>
+                    <option value="meditation_drone">Meditasyon Drone</option>
+                    <option value="lofi_chill">Lo-fi Chill</option>
+                </select>
+            </div>
+            
+            <div class="control-group">
+                <label>Ton:</label>
+                <select id="scaleSelect">
+                    <option value="minor">A Minor</option>
+                    <option value="major">C Major</option>
+                    <option value="pentatonic">Pentatonic Minor</option>
+                    <option value="pentatonic_major">Pentatonic Major</option>
+                    <option value="dorian">D Dorian</option>
+                    <option value="lydian">F Lydian (Rüya Gibi)</option>
+                </select>
+            </div>
+            
+            <div class="control-group slider-container">
+                <label>Tempo: <span id="tempoValue">80</span> BPM</label>
+                <input type="range" id="tempoSlider" class="slider" min="40" max="140" value="70">
+            </div>
+            
+            <div class="control-group slider-container">
+                <label>Reverb: <span id="reverbValue">30</span>%</label>
+                <input type="range" id="reverbSlider" class="slider" min="0" max="100" value="50">
+            </div>
+        </div>
+        
+        <div class="music-action-buttons">
+            <button class="btn" id="generatePlayMusicBtn" onclick="generateAndPlayMusic()">🎵 Müzik Oluştur & Çal</button>
+            <button class="btn" id="stopMusicBtn" onclick="stopMusic()" disabled style="background: linear-gradient(45deg, #666, #444);">⏹️ Durdur</button>
+        </div>
+        <button class="btn" id="saveMusicBtn" onclick="saveGeneratedMusic()" disabled style="margin-top: 10px; background: linear-gradient(45deg, #5cb85c, #4cae4c); width:100%;">💾 Müziği Kaydet</button>
+        
+        <div id="musicStatus" class="status"></div>
+
+        <h4 class="preview-subtitle" id="musicPreviewTitle" style="display:none; margin-top: 15px; color: #ff6b6b;">🎶 Kaydedilmiş Müzik:</h4>
+        <audio id="musicPreviewPlayer" controls style="display:none; width:100%; margin-top:5px;"></audio>
+    </div>
+    
+    <!-- Alt Panel: Export -->
+    <div class="export-section">
+        <h3>🎬 Birleştir & TikTok Export</h3>
+        <button class="btn export-btn" id="combineAndPreviewBtn" onclick="combineAndPreview()" disabled>🔗 Birleştir & Önizle</button>
+        <button class="btn export-btn" id="downloadFinalVideoBtn" onclick="downloadFinalVideo()" style="display:none; margin-top:10px; background: linear-gradient(45deg, #5cb85c, #4cae4c);">📱 TikTok MP4 İndir</button>
+        <div class="progress-container" id="progressContainer">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        <div id="exportStatus" class="status"></div>
+    </div>
+</div>
+
+<!-- Kütüphane CDN'leri -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/7.4.2/pixi.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+
+<!-- Debug için konsol mesajları -->
+<script>
+    // Kütüphanelerin yüklenip yüklenmediğini kontrol et
+    window.addEventListener('load', () => {
+        console.log('p5 loaded:', typeof p5 !== 'undefined');
+        console.log('THREE loaded:', typeof THREE !== 'undefined');
+        console.log('PIXI loaded:', typeof PIXI !== 'undefined');
+        console.log('Tone loaded:', typeof Tone !== 'undefined');
+    });
+</script>
+
+<script src="script.js"></script>
+IGNORE_WHEN_COPYING_START
+content_copy
+download
+Use code with caution.
+IGNORE_WHEN_COPYING_END
+</body>
+</html>
