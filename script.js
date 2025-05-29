@@ -1462,9 +1462,30 @@ async function startRecordingP5Animation(code, duration, fps) {
             
             p_rec_instance.setup = function() {
                 try {
+                    // Gizli container oluştur
+                    let hiddenContainer = document.getElementById('hidden-recording-container');
+                    if (!hiddenContainer) {
+                        hiddenContainer = document.createElement('div');
+                        hiddenContainer.id = 'hidden-recording-container';
+                        hiddenContainer.style.position = 'absolute';
+                        hiddenContainer.style.top = '-9999px';
+                        hiddenContainer.style.left = '-9999px';
+                        hiddenContainer.style.visibility = 'hidden';
+                        hiddenContainer.style.pointerEvents = 'none';
+                        hiddenContainer.style.width = '0px';
+                        hiddenContainer.style.height = '0px';
+                        hiddenContainer.style.overflow = 'hidden';
+                        document.body.appendChild(hiddenContainer);
+                    }
+                    
                     p5CanvasForRecording = p_rec_instance.createCanvas(360, 640);
                     p_rec_instance.frameRate(fps);
                     internalTimeCounter = 0; 
+                    
+                    // Canvas'ı gizli container'a taşı
+                    if (p5CanvasForRecording && p5CanvasForRecording.elt) {
+                        hiddenContainer.appendChild(p5CanvasForRecording.elt);
+                    }
                     
                     setTimeout(() => {
                         if (p5CanvasForRecording && p5CanvasForRecording.elt) {
@@ -1473,6 +1494,13 @@ async function startRecordingP5Animation(code, duration, fps) {
                                     try { tempRecordingSketch.remove(); } catch(e) {}
                                     tempRecordingSketch = null; 
                                 }
+                                
+                                // Gizli container'ı temizle
+                                const containerToRemove = document.getElementById('hidden-recording-container');
+                                if (containerToRemove && containerToRemove.parentNode) {
+                                    containerToRemove.parentNode.removeChild(containerToRemove);
+                                }
+                                
                                 isRecordingAnimation = false; 
                                 if(saveAnimationVideoBtnElement) saveAnimationVideoBtnElement.textContent = '💾 Animasyon Videosunu Kaydet';
                                 updateButtonStates();
@@ -1496,17 +1524,14 @@ async function startRecordingP5Animation(code, duration, fps) {
 
             p_rec_instance.draw = function() {
                 try {
-                    // t değişkenini p5globalsRec'a düzgün aktar
                     p5globalsRec.t = internalTimeCounter;
                     
-                    // Kullanıcı kodunu eval ile çalıştır
                     const codeWithContext = `
                         let t = ${internalTimeCounter};
                         ${code}
                         window.p5_recording_t = t;
                     `;
                     
-                    // p5 globals'ı window'a geçici olarak ekle
                     const originalValues = {};
                     Object.keys(p5globalsRec).forEach(key => {
                         if (key !== 't') {
@@ -1517,7 +1542,6 @@ async function startRecordingP5Animation(code, duration, fps) {
                     
                     eval(codeWithContext);
                     
-                    // p5 globals'ı window'dan kaldır
                     Object.keys(p5globalsRec).forEach(key => {
                         if (key !== 't') {
                             if (originalValues[key] !== undefined) {
@@ -1528,7 +1552,6 @@ async function startRecordingP5Animation(code, duration, fps) {
                         }
                     });
                     
-                    // t değişkeninin değişimini yakala
                     if (typeof window.p5_recording_t !== 'undefined') {
                         internalTimeCounter = window.p5_recording_t;
                         delete window.p5_recording_t;
@@ -1549,7 +1572,8 @@ async function startRecordingP5Animation(code, duration, fps) {
                 }
             };
         });
-         if (!tempRecordingSketch) {
+        
+        if (!tempRecordingSketch) {
             reject(new Error("p5.js kayıt instance'ı oluşturulamadı."));
         }
     });

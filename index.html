@@ -94,15 +94,17 @@ t += 0.05;</textarea>
     
     <!-- Orta Panel: Canlı Animasyon & Birleştirilmiş Önizleme -->
     <div class="preview-section">
-        <h3 class="preview-title" id="liveAnimationTitle">🖼️ Canlı Animasyon</h3>
-        <h3 class="preview-title" id="combinedPreviewTitle" style="display:none;">📱 TikTok Birleştirilmiş Önizleme</h3>
-        <div class="phone-frame">
-            <div id="sketch-holder">
-                <!-- Graphics canvas will be inserted here -->
+        <div class="preview-panel">
+            <h3 class="preview-title" id="liveAnimationTitle">🖼️ Canlı Animasyon</h3>
+            <h3 class="preview-title" id="combinedPreviewTitle" style="display:none;">📱 TikTok Birleştirilmiş Önizleme</h3>
+            <div class="phone-frame">
+                <div id="sketch-holder">
+                    <!-- Graphics canvas will be inserted here -->
+                </div>
+                <video id="combinedPreviewPlayer" width="360" height="640" controls loop
+                       style="display: none;">
+                </video>
             </div>
-            <video id="combinedPreviewPlayer" width="360" height="640" controls loop
-                   style="display: none;">
-            </video>
         </div>
     </div>
     
@@ -160,18 +162,20 @@ t += 0.05;</textarea>
         <audio id="musicPreviewPlayer" controls style="display:none; width:100%; margin-top:5px;"></audio>
     </div>
     
-    <!-- Alt Panel: Export -->
-    <div class="export-section">
-        <h3>🎬 Birleştir & TikTok Export</h3>
-        <button class="btn export-btn" id="combineAndPreviewBtn" onclick="combineAndPreview()" disabled>🔗 Birleştir & Önizle</button>
-        <button class="btn export-btn" id="downloadFinalVideoBtn" onclick="downloadFinalVideo()" style="display:none; margin-top:10px; background: linear-gradient(45deg, #5cb85c, #4cae4c);">📱 TikTok MP4 İndir</button>
-        <div class="progress-container" id="progressContainer">
-            <div class="progress-bar" id="progressBar"></div>
-        </div>
-        <div id="exportStatus" class="status"></div>
-    </div>
-</div>
-
+      <!-- Alt Panel: Export -->
+      <div class="export-section">
+          <div class="progress-container" id="progressContainer">
+              <div class="progress-bar" id="progressBar"></div>
+              <div class="progress-text">0%</div>
+          </div>
+          <h3>🎬 TikTok Export</h3>
+          <div class="export-buttons">
+              <button class="btn export-btn" id="combineAndPreviewBtn" onclick="combineAndPreview()" disabled>🔗 Birleştir & Önizle</button>
+              <button class="btn export-btn" id="downloadFinalVideoBtn" onclick="downloadFinalVideo()" style="display:none;">📱 MP4 İndir</button>
+          </div>
+          <div id="exportStatus" class="status"></div>
+      </div>
+          
 <!-- Kütüphane CDN'leri -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -190,10 +194,5 @@ t += 0.05;</textarea>
 </script>
 
 <script src="script.js"></script>
-IGNORE_WHEN_COPYING_START
-content_copy
-download
-Use code with caution.
-IGNORE_WHEN_COPYING_END
 </body>
 </html>
