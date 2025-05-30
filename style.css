@@ -219,6 +219,42 @@ body {
     display: block;
 }
 
+/* 🔥 HD CANVAS SCALE ÇÖZÜMÜ - Canvas'ları HD boyutlarda oluştur ama yarıya küçült */
+#sketch-holder canvas,
+#sketch-holder > div > canvas {
+    transform: scale(0.5) !important;
+    transform-origin: top left !important;
+    width: 720px !important;
+    height: 1280px !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+}
+
+/* p5.js canvas'ı için özel kural */
+#sketch-holder .p5Canvas {
+    transform: scale(0.5) !important;
+    transform-origin: top left !important;
+}
+
+/* Three.js renderer canvas'ı için */
+#sketch-holder canvas[data-engine="three"] {
+    transform: scale(0.5) !important;
+    transform-origin: top left !important;
+}
+
+/* WebGL canvas için */
+#sketch-holder canvas[style*="position"] {
+    transform: scale(0.5) !important;
+    transform-origin: top left !important;
+}
+
+/* PIXI.js canvas'ı için */
+#sketch-holder canvas[data-pixi] {
+    transform: scale(0.5) !important;
+    transform-origin: top left !important;
+}
+
 #combinedPreviewPlayer {
     width: 360px;
     height: 640px;
@@ -404,8 +440,6 @@ body {
     }
 }
 
-/* Mevcut CSS'in sonuna eklenecek mobil düzeltme */
-
 @media (max-width: 992px) {
     .container {
         grid-template-columns: 1fr;
@@ -453,6 +487,13 @@ body {
         max-width: 360px;
         aspect-ratio: 360 / 640; /* Oranı koru */
     }
+
+    /* HD canvas'ları mobilde de scale et */
+    #sketch-holder canvas,
+    #sketch-holder > div > canvas {
+        transform: scale(0.5) !important;
+        transform-origin: top left !important;
+    }
 }
 
 /* Çok küçük ekranlar için ekstra düzeltme */
@@ -477,5 +518,12 @@ body {
     .phone-frame {
         width: 100%;
         max-width: 320px; /* Minimum boyut sınırı */
+    }
+
+    /* Küçük ekranlarda daha da küçük scale */
+    #sketch-holder canvas,
+    #sketch-holder > div > canvas {
+        transform: scale(0.44) !important; /* 320/720 ≈ 0.44 */
+        transform-origin: top left !important;
     }
 }

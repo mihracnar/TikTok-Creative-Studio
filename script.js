@@ -8,28 +8,28 @@ function utf8_to_b64(str) {
     }
 }
 
-// --- Şablon Kodları ---
+// --- HD Şablon Kodları (720x1280) ---
 const LIBRARY_TEMPLATES = {
-    p5js: `// p5.js Spiral Animasyonu
+    p5js: `// p5.js HD Spiral Animasyonu (720x1280)
 // 't' değişkeni otomatik olarak yönetilir
 
 background(10, 10, 30); // Arka planı her frame temizle
 stroke(100, 200, 255, 200);
 
-for (let i = 0; i < 5000; i++) {
-    let x = i % 200;
-    let y = Math.floor(i / 200);
+for (let i = 0; i < 8000; i++) { // Daha fazla parçacık HD için
+    let x = i % 400;  // 200 → 400 (2x)
+    let y = Math.floor(i / 400);  // 200 → 400 (2x)
     
-    let k = x / 8 - 12;
-    let e = y / 13 - 14;
+    let k = x / 16 - 12;  // 8 → 16 (2x)
+    let e = y / 26 - 14;  // 13 → 26 (2x)
     let o = Math.sqrt(k*k + e*e) / 2;
     let d = 5 * cos(o); 
     
     let q = x/2 + 10 + 1/k + k * cos(e) * sin(d*8 - t); 
     let c = d/3 + t/8;
     
-    let px = q * sin(c) + sin(d*2 + t) * k + 180;
-    let py = (y/4 + 5*o*o + q*cos(c*3))/2 * cos(c) + 320;
+    let px = q * sin(c) + sin(d*2 + t) * k + 360;  // 180 → 360 (2x)
+    let py = (y/4 + 5*o*o + q*cos(c*3))/2 * cos(c) + 640;  // 320 → 640 (2x)
     
     // Canvas sınırları içinde mi kontrol et
     if (px > 0 && px < width && py > 0 && py < height) { 
@@ -40,7 +40,7 @@ for (let i = 0; i < 5000; i++) {
 t += 0.05; // Zamanı ilerlet
 `,
 
-    threejs: `// Three.js 3D Dönen Geometri
+    threejs: `// Three.js HD 3D Dönen Geometri (720x1280)
 // Global değişkenler: scene, camera, renderer, mesh, t (window.t olarak)
 // Kütüphane: THREE (window.THREE olarak)
 
@@ -49,16 +49,16 @@ if (!scene) {
     if(holder) holder.innerHTML = ''; // sketchHolder'ı temizle
 
     scene = new THREE.Scene();
-    camera = new THREE.PerspectiveCamera(75, 360/640, 0.1, 1000);
+    camera = new THREE.PerspectiveCamera(75, 720/1280, 0.1, 1000);  // HD aspect ratio
     renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-    renderer.setSize(360, 640);
+    renderer.setSize(720, 1280);  // HD boyut
     renderer.setClearColor(0x0a0a1e, 1);
     
     if (holder && !holder.contains(renderer.domElement)) { 
         holder.appendChild(renderer.domElement);
     }
     
-    const geometry = new THREE.TorusKnotGeometry(1, 0.3, 100, 16);
+    const geometry = new THREE.TorusKnotGeometry(1.5, 0.4, 120, 20);  // Daha detaylı geometri
     const material = new THREE.MeshPhongMaterial({ 
         color: 0x64c8ff,
         shininess: 100,
@@ -68,14 +68,14 @@ if (!scene) {
     mesh = new THREE.Mesh(geometry, material);
     scene.add(mesh);
     
-    const light = new THREE.PointLight(0xffffff, 1, 100);
+    const light = new THREE.PointLight(0xffffff, 1.2, 100);  // Daha güçlü ışık
     light.position.set(0, 0, 10);
     scene.add(light);
     
     const ambientLight = new THREE.AmbientLight(0x404040, 0.7); 
     scene.add(ambientLight);
     
-    camera.position.z = 5;
+    camera.position.z = 6;  // Biraz daha uzak
 }
 
 if (mesh && scene && camera && renderer) { 
@@ -89,7 +89,7 @@ if (mesh && scene && camera && renderer) {
 }
 t += 0.02;`,
 
-    pixijs: `// Pixi.js Parçacık Sistemi
+    pixijs: `// Pixi.js HD Parçacık Sistemi (720x1280)
 // Global değişkenler: app, container, particles, t (window.t olarak)
 // Kütüphane: PIXI (window.PIXI olarak)
 
@@ -99,8 +99,8 @@ if (!app) {
 
     try {
         app = new PIXI.Application({
-            width: 360,
-            height: 640,
+            width: 720,   // HD genişlik
+            height: 1280, // HD yükseklik
             backgroundColor: 0x0a0a1e,
             transparent: false,
             antialias: true,
@@ -118,16 +118,16 @@ if (!app) {
         app.stage.addChild(container);
         
         particles = [];
-        for (let i = 0; i < 100; i++) {
+        for (let i = 0; i < 200; i++) {  // Daha fazla parçacık HD için
             const particle = new PIXI.Graphics();
             particle.beginFill(Math.random() * 0xFFFFFF); 
-            particle.drawCircle(0, 0, Math.random() * 3 + 2); 
+            particle.drawCircle(0, 0, Math.random() * 4 + 3);  // Daha büyük parçacıklar
             particle.endFill();
             
-            particle.x = Math.random() * 360;
-            particle.y = Math.random() * 640;
-            particle.vx = (Math.random() - 0.5) * 2;
-            particle.vy = (Math.random() - 0.5) * 2;
+            particle.x = Math.random() * 720;   // HD genişlik
+            particle.y = Math.random() * 1280;  // HD yükseklik
+            particle.vx = (Math.random() - 0.5) * 3;  // Daha hızlı hareket
+            particle.vy = (Math.random() - 0.5) * 3;
             
             particles.push(particle);
             container.addChild(particle);
@@ -141,13 +141,14 @@ if (!app) {
 
 if (particles && particles.length > 0 && app) { 
     particles.forEach((particle, index) => {
-        particle.x += particle.vx + Math.sin(t + index * 0.1) * 0.5;
-        particle.y += particle.vy + Math.cos(t + index * 0.1) * 0.5;
+        particle.x += particle.vx + Math.sin(t + index * 0.1) * 0.7;
+        particle.y += particle.vy + Math.cos(t + index * 0.1) * 0.7;
         
-        if (particle.x < -5) particle.x = 365; 
-        if (particle.x > 365) particle.x = -5;
-        if (particle.y < -5) particle.y = 645;
-        if (particle.y > 645) particle.y = -5;
+        // HD sınırlar
+        if (particle.x < -5) particle.x = 725; 
+        if (particle.x > 725) particle.x = -5;
+        if (particle.y < -5) particle.y = 1285;
+        if (particle.y > 1285) particle.y = -5;
         
         try {
             const hue = (t * 30 + index * 10) % 360;
@@ -163,7 +164,7 @@ if (particles && particles.length > 0 && app) {
 }
 t += 0.03;`,
 
-    webgl: `// WebGL Shader Animasyonu
+    webgl: `// WebGL HD Shader Animasyonu (720x1280)
 // Global değişkenler: canvas, gl, program, timeLocation, resolutionLocation, t (window.t olarak)
 
 if (!canvas || !gl) { 
@@ -173,8 +174,8 @@ if (!canvas || !gl) {
     canvas = document.createElement('canvas');
     if(holder) holder.appendChild(canvas);
     
-    canvas.width = 360;
-    canvas.height = 640;
+    canvas.width = 720;   // HD genişlik
+    canvas.height = 1280; // HD yükseklik
     
     gl = canvas.getContext('webgl', { antialias: true }) || canvas.getContext('experimental-webgl', { antialias: true });
     
@@ -207,13 +208,23 @@ if (!canvas || !gl) {
             vec3 color = vec3(0.0);
             float time = u_time * 0.5;
             vec2 pos = st - vec2(0.5);
-            float r = length(pos) * 2.0;
+            float r = length(pos) * 2.5;  // Daha yoğun desen
             float a = atan(pos.y, pos.x);
-            float f = cos(a * 3.);
-            f = mix(f, cos(a*10.), smoothstep(.0,1.,abs(sin(time)) ));
-            f = mix(f, cos(a*20.+time*2.), pow(length(pos),.5));
-            vec3 hsv = vec3( a/ (2.*3.14159265) + 0.5 + time*0.1, abs(f), pow(r, abs(f)) );
+            
+            // HD için daha karmaşık desenler
+            float f = cos(a * 5.);
+            f = mix(f, cos(a*15.), smoothstep(.0,1.,abs(sin(time*1.5)) ));
+            f = mix(f, cos(a*25.+time*3.), pow(length(pos),.4));
+            
+            // Daha dinamik renk geçişleri
+            vec3 hsv = vec3( a/ (2.*3.14159265) + 0.5 + time*0.15, 
+                           abs(f) * 0.8 + 0.2, 
+                           pow(r, abs(f)*0.8 + 0.2) );
             color = hsv2rgb(hsv);
+            
+            // HD için parlaklık artırma
+            color *= 1.2;
+            
             gl_FragColor = vec4(color, 1.0);
         }
     \`;
@@ -278,7 +289,7 @@ if (gl && program && timeLocation && resolutionLocation) {
 t += 0.016; 
 `,
 
-    canvas2d: `// Canvas 2D Native Animasyon
+    canvas2d: `// Canvas 2D HD Native Animasyon (720x1280)
 // Global değişkenler: canvas, ctx, t (window.t olarak)
 
 if (!canvas || !ctx) { 
@@ -288,8 +299,8 @@ if (!canvas || !ctx) {
     canvas = document.createElement('canvas');
     if(holder) holder.appendChild(canvas);
 
-    canvas.width = 360;
-    canvas.height = 640;
+    canvas.width = 720;   // HD genişlik
+    canvas.height = 1280; // HD yükseklik
     ctx = canvas.getContext('2d');
 }
 
@@ -297,16 +308,16 @@ if (ctx) {
     ctx.fillStyle = 'rgba(10, 10, 30, 0.08)'; 
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    const centerX = canvas.width / 2;
-    const centerY = canvas.height / 2;
+    const centerX = canvas.width / 2;   // 720
+    const centerY = canvas.height / 2;  // 1280
 
     ctx.strokeStyle = \`hsl(\${(t * 40) % 360}, 80%, 65%)\`;
-    ctx.lineWidth = 1.5 + Math.sin(t * 1.5) * 0.7;
+    ctx.lineWidth = 2.5 + Math.sin(t * 1.5) * 1.2;  // Daha kalın çizgiler HD için
     ctx.beginPath();
 
-    for (let i = 0; i < 250; i++) { 
+    for (let i = 0; i < 400; i++) {  // Daha fazla spiral nokta
         const angle = i * (0.12 + Math.sin(t * 0.25) * 0.03) + t * 1.2;
-        const radius = i * (0.6 + Math.cos(t*0.35) * 0.15);
+        const radius = i * (1.2 + Math.cos(t*0.35) * 0.3);  // Daha büyük spiral
         const x = centerX + Math.cos(angle) * radius;
         const y = centerY + Math.sin(angle) * radius;
         
@@ -318,15 +329,16 @@ if (ctx) {
     }
     ctx.stroke();
 
-    for (let i = 0; i < 15; i++) { 
-        const angle = i * (Math.PI * 2 / 15) + t * (1.8 + Math.sin(i*0.15)*0.25);
-        const radius = 90 + Math.sin(t * 1.3 + i * 0.6) * 40;
+    // HD için daha fazla parçacık
+    for (let i = 0; i < 25; i++) { 
+        const angle = i * (Math.PI * 2 / 25) + t * (1.8 + Math.sin(i*0.15)*0.25);
+        const radius = 160 + Math.sin(t * 1.3 + i * 0.6) * 80;  // Daha büyük radius
         const x = centerX + Math.cos(angle) * radius;
         const y = centerY + Math.sin(angle) * radius;
         
         ctx.fillStyle = \`hsla(\${(t * 25 + i * 20) % 360}, 85%, 75%, 0.75)\`;
         ctx.beginPath();
-        ctx.arc(x, y, 2.5 + Math.sin(t * 3.5 + i) * 1.5, 0, Math.PI * 2);
+        ctx.arc(x, y, 4 + Math.sin(t * 3.5 + i) * 2.5, 0, Math.PI * 2);  // Daha büyük parçacıklar
         ctx.fill();
     }
 } else {
@@ -916,7 +928,7 @@ function startP5Animation(code) {
 
         p_instance.setup = function() {
             try {
-                p5Canvas = p_instance.createCanvas(360, 640);
+                p5Canvas = p_instance.createCanvas(720, 1280);
                 p5Canvas.parent(sketchHolder);
                 
                 const fpsVal = fpsInputElement ? parseInt(fpsInputElement.value) : 30;
@@ -1078,9 +1090,9 @@ function startThreeJSAnimation(code) {
         if (holder) holder.innerHTML = '';
 
         scene = new THREE.Scene();
-        camera = new THREE.PerspectiveCamera(75, 360/640, 0.1, 1000);
+        camera = new THREE.PerspectiveCamera(75, 720/1280, 0.1, 1000);
         renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-        renderer.setSize(360, 640);
+        renderer.setSize(720, 1280);
         renderer.setClearColor(0x0a0a1e, 1);
         
         if (holder && !holder.contains(renderer.domElement)) { 
@@ -1129,8 +1141,8 @@ function startPixiJSAnimation(code) {
         if (holder) holder.innerHTML = '';
 
         app = new PIXI.Application({
-            width: 360,
-            height: 640,
+            width: 720,
+            height: 1280,
             backgroundColor: 0x0a0a1e,
             transparent: false,
             antialias: true,
@@ -1153,8 +1165,8 @@ function startPixiJSAnimation(code) {
             particle.drawCircle(0, 0, Math.random() * 3 + 2); 
             particle.endFill();
             
-            particle.x = Math.random() * 360;
-            particle.y = Math.random() * 640;
+            particle.x = Math.random() * 720;
+            particle.y = Math.random() * 1280;
             particle.vx = (Math.random() - 0.5) * 2;
             particle.vy = (Math.random() - 0.5) * 2;
             
@@ -1182,8 +1194,8 @@ function startWebGLAnimation(code) {
         canvas = document.createElement('canvas');
         if (holder) holder.appendChild(canvas);
         
-        canvas.width = 360;
-        canvas.height = 640;
+        canvas.width = 720;
+        canvas.height = 1280;
         
         gl = canvas.getContext('webgl', { antialias: true }) || canvas.getContext('experimental-webgl', { antialias: true });
         
@@ -1292,8 +1304,8 @@ function startCanvas2DAnimation(code) {
         canvas = document.createElement('canvas');
         if (holder) holder.appendChild(canvas);
 
-        canvas.width = 360;
-        canvas.height = 640;
+        canvas.width = 720;
+        canvas.height = 1280;
         ctx = canvas.getContext('2d');
         
         if (!ctx) {
@@ -1478,7 +1490,7 @@ async function startRecordingP5Animation(code, duration, fps) {
                         document.body.appendChild(hiddenContainer);
                     }
                     
-                    p5CanvasForRecording = p_rec_instance.createCanvas(360, 640);
+                    p5CanvasForRecording = p_rec_instance.createCanvas(720, 1280);
                     p_rec_instance.frameRate(fps);
                     internalTimeCounter = 0; 
                     
@@ -1584,8 +1596,8 @@ async function startRecordingGenericAnimation(code, duration, fps, libraryName) 
     return new Promise((resolve, reject) => {
         // Kayıt için canvas oluştur
         const recordingCanvas = document.createElement('canvas');
-        recordingCanvas.width = 360;
-        recordingCanvas.height = 640;
+        recordingCanvas.width = 720;
+        recordingCanvas.height = 1280;
         recordingCanvas.style.position = 'absolute';
         recordingCanvas.style.top = '-9999px'; // Gizle
         document.body.appendChild(recordingCanvas);
@@ -1722,9 +1734,9 @@ async function startRecordingGenericAnimation(code, duration, fps, libraryName) 
             if (libraryName === 'threejs') {
                 // Three.js setup for recording
                 recordingScene = new THREE.Scene();
-                recordingCamera = new THREE.PerspectiveCamera(75, 360 / 640, 0.1, 1000);
+                recordingCamera = new THREE.PerspectiveCamera(75, 720 / 1280, 0.1, 1000);
                 recordingRenderer = new THREE.WebGLRenderer({ canvas: recordingCanvas, antialias: true });
-                recordingRenderer.setSize(360, 640);
+                recordingRenderer.setSize(720, 1280);
                 recordingRenderer.setClearColor(0x0a0a1e, 1);
                 
                 // Mesh ve lighting setup (template'deki gibi)
@@ -1752,8 +1764,8 @@ async function startRecordingGenericAnimation(code, duration, fps, libraryName) 
                 // Pixi.js setup for recording
                 recordingApp = new PIXI.Application({
                     view: recordingCanvas,
-                    width: 360,
-                    height: 640,
+                    width: 720,
+                    height: 1280,
                     backgroundColor: 0x0a0a1e,
                     antialias: true,
                     forceCanvas: false
@@ -1769,8 +1781,8 @@ async function startRecordingGenericAnimation(code, duration, fps, libraryName) 
                     particle.drawCircle(0, 0, Math.random() * 3 + 2);
                     particle.endFill();
                     
-                    particle.x = Math.random() * 360;
-                    particle.y = Math.random() * 640;
+                    particle.x = Math.random() * 720;
+                    particle.y = Math.random() * 1280;
                     particle.vx = (Math.random() - 0.5) * 2;
                     particle.vy = (Math.random() - 0.5) * 2;
                     
@@ -1939,7 +1951,7 @@ async function startVideoRecording(duration, fps, htmlCanvasElement, onStopCallb
     try {
         animationRecorder = new MediaRecorder(videoStream, { 
             mimeType: selectedType, 
-            videoBitsPerSecond: 2500000 
+            videoBitsPerSecond: 8000000 
         });
         console.log("[startVideoRecording] MediaRecorder created");
     } catch (e) { 
@@ -2197,7 +2209,7 @@ async function startMusicRecording(duration) {
     }
     try {
         if (Tone.context.state !== 'running') await Tone.start();
-        musicAudioRecorder = new MediaRecorder(audioDestination.stream, { mimeType: audioMimeType, audioBitsPerSecond: 128000 });
+        musicAudioRecorder = new MediaRecorder(audioDestination.stream, { mimeType: audioMimeType, audioBitsPerSecond: 256000 });
     } catch (e) {
         showStatus('musicStatus', `Müzik MediaRecorder oluşturma hatası: ${e.message}`, 'error');
         isRecordingMusic = false; if(saveMusicBtnElement) saveMusicBtnElement.textContent = '💾 Müziği Kaydet';
@@ -2279,7 +2291,7 @@ async function combineVideoWithAudio(videoBlob, audioBlob, duration) {
     const tempAudioEl = document.createElement('audio');
     const muxedCanvas = document.createElement('canvas'); 
     const muxedCtx = muxedCanvas.getContext('2d');
-    muxedCanvas.width = 360; muxedCanvas.height = 640;
+    muxedCanvas.width = 720; muxedCanvas.height = 1280;
     
     let videoUrl = null;
     let audioUrl = null;
